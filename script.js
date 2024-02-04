@@ -1,58 +1,96 @@
-let arr = [
-    { id: 1, name: 'john', age: 18, profession: 'developer' },
-    { id: 2, name: 'jack', age: 20, profession: 'developer' },
-    { id: 3, name: 'karen', age: 19, profession: 'admin' },
-  ];
-  
-  let arr2 = [
-    { id: 5, name: 'rahul', age: 21, profession: 'developer' },
-    { id: 6, name: 'tushar', age: 20, profession: 'developer' },
-    { id: 7, name: 'alkesh', age: 18, profession: 'admin' },
-  ];
-  
-  // Don't worry about consoling these functions, they are already being called on the button clicks.
-  // Please don't change anything in the index.html file.
-  
-  function PrintDeveloper() {
-    //Write your code here , just console.log
-       arr.forEach(element=>{
-        if(element.profession==="developer")
-        {
-            console.log(`ID:${element.id},Name:${element.name},Age:${element.age},Profession:${element.profession}`);
+document.addEventListener('DOMContentLoaded', function () {
+    const taskForm = document.getElementById('taskForm');
+    const taskList = document.getElementById('taskList');
+    const filterStatus = document.getElementById('filterStatus');
+    const filterPriority = document.getElementById('filterPriority');
+    const searchInput = document.getElementById('search');
+    const totalTasksCount = document.getElementById('totalTasks');
+    const todoCount = document.getElementById('todoCount');
+    const inProgressCount = document.getElementById('inProgressCount');
+    const doneCount = document.getElementById('doneCount');
+
+    let tasks = [];
+
+    // Add task event listener
+    taskForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        addTask();
+    });
+
+    // Initialize tasks from local storage
+    if (localStorage.getItem('tasks')) {
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+        displayTasks();
+    }
+
+    // Function to add a new task
+    function addTask() {
+        const taskName = document.getElementById('taskName').value;
+        const dueDate = document.getElementById('dueDate').value;
+        const priority = document.getElementById('priority').value;
+
+        const newTask = {
+            id: Date.now(),
+            name: taskName,
+            dueDate: dueDate,
+            priority: priority,
+            status: 'todo'
+        };
+
+        tasks.push(newTask);
+        saveTasks();
+        displayTasks();
+        taskForm.reset();
+    }
+
+    // Function to save tasks to local storage
+    function saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
+
+    // Function to display tasks
+    function displayTasks() {
+        taskList.innerHTML = '';
+        tasks.forEach(task => {
+            const taskItem = document.createElement('div');
+            taskItem.classList.add('task');
+            taskItem.innerHTML = `
+                <span>${task.name} - Due: ${task.dueDate}</span>
+                <button onclick="editTask(${task.id})">Edit</button>
+                <button onclick="deleteTask(${task.id})">Delete</button>
+            `;
+            taskList.appendChild(taskItem);
+        });
+
+        updateTaskCounts();
+    }
+
+    // Function to edit a task
+    window.editTask = function (taskId) {
+        const taskIndex = tasks.findIndex(task => task.id === taskId);
+        const updatedTaskName = prompt('Enter updated task name:', tasks[taskIndex].name);
+        const updatedDueDate = prompt('Enter updated due date:', tasks[taskIndex].dueDate);
+
+        if (updatedTaskName !== null && updatedDueDate !== null) {
+            tasks[taskIndex].name = updatedTaskName;
+            tasks[taskIndex].dueDate = updatedDueDate;
+            saveTasks();
+            displayTasks();
         }
-       });
-  }
-  
-  function addData() {
-    //Write your code here, just console.log
-    let newEmployee = {id:4,name:"susan",age:20,profession:"intern"}
-    arr.push(newEmployee);
-    arr.forEach(element=>{
-       
-            console.log(`ID:${element.id},Name:${element.name},Age:${element.age},Profession:${element.profession}`);
-       });
-  }
-  
-  function removeAdmin() {
-    //Write your code here, just console.log
-    arr=arr.filter(element=>element.profession!=="admin");
-    arr.forEach(element=>{
-       
-        console.log(`ID:${element.id},Name:${element.name},Age:${element.age},Profession:${element.profession}`);
-   });
-  }
-  
-  function concatenateArray() {
-    //Write your code here, just console.log
-    let concatenateArray=arr.concat(arr2);
-    console.log(concatenateArray);
-  }
-  
-  // Here is an example of how functions work,
-  // basically a function is a block of code which can directly access your 'arr' variable since arr is global.
-  // If I have a function called consoleArr(), that can directly access arr like this to console it.
-  
-  function consoleArr() {
-    console.log('Consoling Array Variable', arr);
-    // Over here I can directly access the variable.
-  }
+    };
+
+    // Function to delete a task
+    window.deleteTask = function (taskId) {
+        tasks = tasks.filter(task => task.id !== taskId);
+        saveTasks();
+        displayTasks();
+    };
+
+    // Function to update task counts
+    function updateTaskCounts() {
+        totalTasksCount.textContent = tasks.length;
+        todoCount.textContent = tasks.filter(task => task.status === 'todo').length;
+        inProgressCount.textContent = tasks.filter(task => task.status === 'inprogress').length;
+        doneCount.textContent = tasks.filter(task => task.status === 'done').length;
+    }
+});

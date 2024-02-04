@@ -1,0 +1,72 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color:black;
+    color: white;
+}
+
+.container {
+    text-align: center;
+    max-width:100%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    display: block;
+    background-color: #191919;
+    color: white;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color:#4ea8de;
+}
+
+form, .filter-search {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select, button {
+    margin-bottom: 10px;
+    padding: 8px;
+}
+
+button {
+    background-color:#1e6f9f;
+    color: #fff;
+    cursor: pointer;
+}
+
+#taskList {
+    max-height: 300px;
+    overflow-y: auto;
+    color:black;
+}
+
+.task {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.task button {
+    margin-left: 10px;
+    background-color: #1e6f9f;
+}
+
+#taskCounts {
+    margin-top: 20px;
+}
+
+#taskCounts p {
+    margin: 0;
+}
